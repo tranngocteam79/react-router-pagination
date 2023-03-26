@@ -86,3 +86,7 @@ button:focus-visible {
     width: 100px;
   }
 }
+
+#input-product {
+  margin-bottom: 20px;
+}

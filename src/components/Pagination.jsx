@@ -14,7 +14,7 @@ export default function Pagination({
     (_, i) => i + 1
   ).map((page) => (
     <li key={page}>
-      <Link to="#" onClick={() => handleSetPage(page)}>
+      <Link to={`?page=${page}`} onClick={() => handleSetPage(page)}>
         {page}
       </Link>
     </li>

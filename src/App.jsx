@@ -1,6 +1,8 @@
 import {
   createBrowserRouter,
   createRoutesFromElements,
+  Navigate,
+  Outlet,
   Route,
   RouterProvider,
 } from "react-router-dom";
@@ -12,9 +14,9 @@ import "./App.css";
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/">
-      <Route index element={<Homepage />} />>
-      <Route path="/products" element={<Products />} />
-      <Route path="/products/:id" element={<ProductsDetailPage />} />
+      <Route index element={<Homepage />} />
+      <Route path="products" element={<Products />} />
+      <Route path="product/:id" element={<ProductsDetailPage />} />
     </Route>
   )
 );
