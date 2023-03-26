@@ -9,8 +9,6 @@ export default function Products() {
   const numberOfPage = Math.ceil(totalProducts / productPerPage);
   const [currentRecords, setCurrentRecords] = useState(null);
 
-  console.log("currentPage", currentPage);
-
   useEffect(() => {
     fetch("https://dummyjson.com/products")
       .then((res) => res.json())
