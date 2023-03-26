@@ -3,22 +3,29 @@ import Pagination from "../components/Pagination.jsx";
 import Product from "../components/Product.jsx";
 
 export default function Products() {
-  const [products, setProducts] = useState(null);
+  const [totalProducts, setTotalProducts] = useState(null);
   const [productPerPage] = useState(8);
   const [currentPage, setCurrentPage] = useState(1);
-  const numberOfPage = Math.ceil(products?.length / productPerPage);
-  const currentRecords = products?.slice(
-    currentPage * productPerPage - productPerPage,
-    currentPage * productPerPage
-  );
+  const numberOfPage = Math.ceil(totalProducts / productPerPage);
+  const [currentRecords, setCurrentRecords] = useState(null);
 
   console.log("currentPage", currentPage);
 
   useEffect(() => {
-    fetch(`https://dummyjson.com/products`)
+    fetch("https://dummyjson.com/products")
       .then((res) => res.json())
-      .then((data) => setProducts(data.products));
+      .then((result) => setTotalProducts(result.products.length));
   }, []);
+
+  useEffect(() => {
+    fetch(
+      `https://dummyjson.com/products?limit=${productPerPage}&skip=${
+        (currentPage - 1) * productPerPage
+      }`
+    )
+      .then((res) => res.json())
+      .then((data) => setCurrentRecords(data.products));
+  }, [productPerPage, currentPage]);
 
   return (
     <div className="product-list">
