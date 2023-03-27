@@ -2,41 +2,26 @@ import { useEffect, useState } from "react";
 import Pagination from "../components/Pagination.jsx";
 import Product from "../components/Product.jsx";
 import { useLocation, useNavigate } from "react-router-dom";
+import useFetch from "../hooks/useFetch.js";
 
 export default function Products() {
-  const pageNum = new URLSearchParams(useLocation().search).get("page");
+  const currentPage = new URLSearchParams(useLocation().search).get("page");
   const navigate = useNavigate();
 
-  const [totalProducts, setTotalProducts] = useState(null);
   const [productPerPage, setProductPerPage] = useState(8);
-  const [currentPage, setCurrentPage] = useState(pageNum || 1);
+  const { data: currentsData, totalProducts } = useFetch(
+    `https://dummyjson.com/products?limit=${productPerPage}&skip=${
+      (currentPage - 1) * productPerPage
+    }`
+  );
   const numberOfPage = Math.ceil(totalProducts / productPerPage);
-  const [currentRecords, setCurrentRecords] = useState(null);
 
   useEffect(() => {
     console.log("effect");
-    if (!pageNum) {
+    if (!currentPage) {
       navigate(`?page=1`);
     }
   }, []);
-
-  useEffect(() => {
-    fetch("https://dummyjson.com/products")
-      .then((res) => res.json())
-      .then((result) => setTotalProducts(result.products.length));
-  }, []);
-
-  useEffect(() => {
-    fetch(
-      `https://dummyjson.com/products?limit=${productPerPage}&skip=${
-        (currentPage - 1) * productPerPage
-      }`
-    )
-      .then((res) => res.json())
-      .then((data) => setCurrentRecords(data.products));
-  }, [productPerPage, currentPage]);
-
-  console.log(pageNum);
 
   return (
     <>
@@ -50,19 +35,15 @@ export default function Products() {
         }}
       />
       <div className="product-list">
-        {currentRecords ? (
-          currentRecords.map((product) => (
+        {currentsData ? (
+          currentsData.map((product) => (
             <Product key={product.id} product={product} />
           ))
         ) : (
           <p>Loading...</p>
         )}
         {numberOfPage !== NaN && (
-          <Pagination
-            setCurrentPage={setCurrentPage}
-            numberOfPage={numberOfPage}
-            currentPage={currentPage}
-          />
+          <Pagination numberOfPage={numberOfPage} currentPage={currentPage} />
         )}
       </div>
     </>
